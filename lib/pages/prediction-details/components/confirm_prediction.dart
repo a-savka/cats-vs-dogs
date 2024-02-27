@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ConfirmPrediction extends StatelessWidget {
+  final void Function(bool isValid) onConfirmed;
   const ConfirmPrediction({
     Key? key,
+    required this.onConfirmed,
   }) : super(key: key);
 
   @override
@@ -17,11 +19,11 @@ class ConfirmPrediction extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => onConfirmed(true),
               child: const Text('Right'),
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () => onConfirmed(false),
               child: const Text('Wrong'),
             ),
           ],

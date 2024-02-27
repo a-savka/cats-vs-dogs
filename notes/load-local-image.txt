@@ -1,0 +1,22 @@
+child: FutureBuilder(
+  future: rootBundle.load('assets/images/cat.1501.jpg'),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.done) {
+      final imageData = snapshot.data;
+      if (imageData != null) {
+        img.Image? my_image = img.copyResize(
+            img.decodeImage(
+              imageData.buffer.asUint8List(),
+            )!,
+            width: 180,
+            height: 180);
+        if (my_image != null) {
+          return Image.memory(img.encodeJpg(my_image));
+        }
+        return const Text('Failed to decode data');
+      }
+      return const Text('Failed to load data');
+    }
+    return const Text('Loading');
+  },
+),

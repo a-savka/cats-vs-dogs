@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:cats_vs_dogs/components/pick_image_button.dart';
-import 'package:cats_vs_dogs/components/show_prediction.dart';
 import 'package:cats_vs_dogs/models/prediction.dart';
 import 'package:cats_vs_dogs/pages/history/history.page.dart';
+import 'package:cats_vs_dogs/pages/prediction-details/prediction-details.page.dart';
 import 'package:cats_vs_dogs/services/cuid.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_data/flutter_data.dart';
@@ -21,11 +21,6 @@ class HomePage extends StatefulHookConsumerWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  List<int> _inputShape = [];
-  List<int> _outputShape = [];
-  late TensorType _inputType;
-  late TensorType _outputType;
-
   late Interpreter _interpreter;
   late bool isLoading;
   final ImagePicker picker = ImagePicker();
@@ -40,13 +35,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   void _loadModel() async {
     _interpreter = await Interpreter.fromAsset(
         'assets/models/cats_with_dogs_advanced.tflite');
-
-    setState(() {
-      _inputShape = _interpreter.getInputTensor(0).shape;
-      _outputShape = _interpreter.getOutputTensor(0).shape;
-      _inputType = _interpreter.getInputTensor(0).type;
-      _outputType = _interpreter.getOutputTensor(0).type;
-    });
   }
 
   Future<void> _predictImage(String image_path) async {
@@ -66,7 +54,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     final jpgImage = img.encodeJpg(destImage);
     final Prediction prediction = Prediction(
       id: ref.read(cuidServiceProvider).newCuid(),
-      // prediction: result > 0.5 ? PredictionLabel.dog : PredictionLabel.cat,
       prediction: result > 0.5 ? Prediction.dog : Prediction.cat,
       confidence: ((0.5 - result).abs() * 100 + 50).toInt(),
       image: jpgImage,
@@ -82,7 +69,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       final jpgImage = img.encodePng(my_image);
       final prediction = Prediction(
         id: ref.read(cuidServiceProvider).newCuid(),
-        // prediction: PredictionLabel.cat,
         prediction: Prediction.cat,
         confidence: 99,
         image: jpgImage,
@@ -91,7 +77,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       if (mounted) {
         await Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) {
-            return ShowPrediction(
+            return PredictionDetailsPage(
               prediction: prediction,
             );
           },
@@ -127,7 +113,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       if (mounted) {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) {
-            return ShowPrediction(
+            return PredictionDetailsPage(
               prediction: prediction,
             );
           },
@@ -179,19 +165,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                     const SizedBox(
                       height: 10,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        print('SHAPES:');
-                        print(_inputShape);
-                        print(_inputType);
-                        print(_outputShape);
-                        print(_outputType);
-                      },
-                      child: const Text('Show Info'),
-                    ),
-                    const SizedBox(
-                      height: 5,
                     ),
                     ElevatedButton(
                       onPressed: () {

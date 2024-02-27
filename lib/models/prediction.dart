@@ -6,21 +6,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'prediction.g.dart';
 
-// @HiveType(typeId: 2)
-// enum PredictionLabel {
-//   @HiveField(0)
-//   cat,
-
-//   @HiveField(1)
-//   dog,
-// }
-
 @HiveType(typeId: 1)
 @DataRepository([])
 @JsonSerializable()
 class Prediction extends DataModel<Prediction> {
   static const cat = 'cat';
-  static const dog = 'cat';
+  static const dog = 'dog';
 
   @override
   @HiveField(0)
@@ -82,5 +73,14 @@ class Prediction extends DataModel<Prediction> {
       return 'Cat';
     }
     return 'Dog';
+  }
+
+  String getValidPredictionText() {
+    if (validPrediction == cat) {
+      return 'Cat';
+    } else if (validPrediction == dog) {
+      return 'Dog';
+    }
+    return 'Not provided';
   }
 }
