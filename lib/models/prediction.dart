@@ -1,14 +1,47 @@
 import 'dart:typed_data';
+import 'package:cats_vs_dogs/models/conerters/Uint8List.converter.dart';
+import 'package:hive/hive.dart';
+import 'package:flutter_data/flutter_data.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-enum PredictionLabel { cat, dog }
+part 'prediction.g.dart';
 
-class Prediction {
+// @HiveType(typeId: 2)
+// enum PredictionLabel {
+//   @HiveField(0)
+//   cat,
+
+//   @HiveField(1)
+//   dog,
+// }
+
+@HiveType(typeId: 1)
+@DataRepository([])
+@JsonSerializable()
+class Prediction extends DataModel<Prediction> {
+  static const cat = 'cat';
+  static const dog = 'cat';
+
+  @override
+  @HiveField(0)
   final String id;
-  final PredictionLabel prediction;
+
+  @HiveField(1)
+  final String prediction;
+
+  @HiveField(2)
   final int confidence;
+
+  @HiveField(3)
+  @Uint8ListConverter()
   final Uint8List image;
-  final PredictionLabel? validPrediction;
+
+  @HiveField(4)
+  final String? validPrediction;
+
+  @HiveField(5)
   late DateTime timestamp;
+
   Prediction({
     required this.id,
     required this.prediction,
@@ -20,12 +53,17 @@ class Prediction {
     this.timestamp = timestamp ?? DateTime.now();
   }
 
+  factory Prediction.fromJson(Map<String, dynamic> json) =>
+      _$PredictionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PredictionToJson(this);
+
   Prediction copyWith({
     String? id,
-    PredictionLabel? prediction,
+    String? prediction,
     int? confidence,
     Uint8List? image,
-    PredictionLabel? validPrediction,
+    String? validPrediction,
   }) {
     return Prediction(
       id: id ?? this.id,
@@ -40,7 +78,7 @@ class Prediction {
   bool get isPredictionVerified => validPrediction != null;
 
   String getPredictionText() {
-    if (prediction == PredictionLabel.cat) {
+    if (prediction == cat) {
       return 'Cat';
     }
     return 'Dog';

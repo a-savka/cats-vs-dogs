@@ -1,9 +1,7 @@
 import 'package:cats_vs_dogs/components/confirm_prediction.dart';
 import 'package:cats_vs_dogs/models/prediction.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image/image.dart' as img;
 
 class ShowPrediction extends HookConsumerWidget {
   final Prediction prediction;
@@ -38,7 +36,7 @@ class ShowPrediction extends HookConsumerWidget {
             const SizedBox(
               height: 20,
             ),
-            prediction.isPredictionCorrect == null
+            prediction.validPrediction == prediction.prediction
                 ? const ConfirmPrediction()
                 : const Text('Prediction made'),
             const SizedBox(
