@@ -17,6 +17,7 @@ class PredictionDetailsPage extends HookConsumerWidget {
       prediction.copyWith(validPrediction: Prediction.cat).saveLocal();
     } else {
       prediction.copyWith(validPrediction: Prediction.dog).saveLocal();
+      ;
     }
   }
 

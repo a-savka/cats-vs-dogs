@@ -3,6 +3,7 @@ import 'package:cats_vs_dogs/components/pick_image_button.dart';
 import 'package:cats_vs_dogs/models/prediction.dart';
 import 'package:cats_vs_dogs/pages/history/history.page.dart';
 import 'package:cats_vs_dogs/pages/prediction-details/prediction-details.page.dart';
+import 'package:cats_vs_dogs/pages/statistics/statistics.page.dart';
 import 'package:cats_vs_dogs/services/cuid.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_data/flutter_data.dart';
@@ -150,50 +151,74 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: isLoading
-              ? const CircularProgressIndicator()
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      'Cats Vs Dogs',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // _predictAll();
-                        _convertImage();
-                      },
-                      child: const Text('Load image'),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    PickImageButton(onChoose: (XFile file) {
-                      _pickImage(file);
-                    }),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return const HistoryPage();
-                          },
-                        ));
-                      },
-                      child: const Text('History'),
-                    ),
-                  ],
-                ),
-        ));
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: isLoading
+            ? const CircularProgressIndicator()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'Cats Vs Dogs',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // _predictAll();
+                      _convertImage();
+                    },
+                    child: const Text('Load image'),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  PickImageButton(onChoose: (XFile file) {
+                    _pickImage(file);
+                  }),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const HistoryPage();
+                        },
+                      ));
+                    },
+                    child: const Text('History'),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      final repo = ref.read(predictionsRepositoryProvider);
+                      repo.clear();
+                    },
+                    child: const Text('Clear'),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return const StatisticsPage();
+                        },
+                      ));
+                    },
+                    child: const Text('Statistics'),
+                  ),
+                ],
+              ),
+      ),
+    );
   }
 }
