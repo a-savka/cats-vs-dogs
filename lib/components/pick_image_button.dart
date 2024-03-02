@@ -5,9 +5,11 @@ import 'package:image_picker/image_picker.dart';
 
 class PickImageButton extends HookConsumerWidget {
   final void Function(XFile) onChoose;
+  final ButtonStyle? buttonStyle;
 
   const PickImageButton({
     Key? key,
+    this.buttonStyle,
     required this.onChoose,
   }) : super(key: key);
 
@@ -22,6 +24,7 @@ class PickImageButton extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
+      style: buttonStyle,
       onPressed: () {
         showModalBottomSheet(
           context: context,

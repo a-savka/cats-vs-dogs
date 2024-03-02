@@ -1,9 +1,12 @@
+import 'package:cats_vs_dogs/models/stats.dart';
 import 'package:cats_vs_dogs/providers/stats_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Statistics extends HookConsumerWidget {
-  Statistics({Key? key}) : super(key: key);
+  const Statistics({
+    Key? key,
+  }) : super(key: key);
 
   Widget _makeRow(String title, String text) {
     return Row(
@@ -20,22 +23,7 @@ class Statistics extends HookConsumerWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final statsData = ref.watch(statsProvider);
-
-    if (statsData.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if (!statsData.hasValue) {
-      return const Center(
-        child: Text('No statistics available'),
-      );
-    }
-
+  Widget _makeDataUi(Stats statsData) {
     return Container(
       padding: const EdgeInsets.all(40.0),
       width: double.infinity,
@@ -44,22 +32,40 @@ class Statistics extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _makeRow('Total: ', statsData.value!.total.toString()),
+          _makeRow('Total: ', statsData.total.toString()),
           const SizedBox(
             height: 10,
           ),
-          _makeRow('Confirmed: ', statsData.value!.confirmed.toString()),
+          _makeRow('Confirmed: ', statsData.confirmed.toString()),
           const SizedBox(
             height: 10,
           ),
-          _makeRow('Correct: ', statsData.value!.correct.toString()),
+          _makeRow('Correct: ', statsData.correct.toString()),
           const SizedBox(
             height: 10,
           ),
-          _makeRow(
-              'Accuracy: ', statsData.value!.accuracy.toStringAsFixed(2) + '%'),
+          _makeRow('Accuracy: ', '${statsData.accuracy.toStringAsFixed(2)}%'),
         ],
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statsData = ref.watch(statsProvider);
+
+    return statsData.when(
+      data: _makeDataUi,
+      error: (_, __) {
+        return const Center(
+          child: Text('No statistics available'),
+        );
+      },
+      loading: () {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }

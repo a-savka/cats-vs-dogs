@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:cats_vs_dogs/components/confirm_delete.dart';
 import 'package:cats_vs_dogs/components/pick_image_button.dart';
 import 'package:cats_vs_dogs/models/prediction.dart';
 import 'package:cats_vs_dogs/pages/history/history.page.dart';
@@ -12,6 +13,7 @@ import 'package:image/image.dart' as img;
 import 'package:flutter/services.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_svg/svg.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
   const HomePage({super.key, required this.title});
@@ -63,45 +65,45 @@ class _HomePageState extends ConsumerState<HomePage> {
     return prediction;
   }
 
-  void _convertImage() async {
-    ByteData imageData = await rootBundle.load('assets/images/cat.1501.jpg');
-    img.Image? my_image = img.decodeImage(imageData.buffer.asUint8List())!;
-    if (my_image.isNotEmpty) {
-      final jpgImage = img.encodePng(my_image);
-      final prediction = Prediction(
-        id: ref.read(cuidServiceProvider).newCuid(),
-        prediction: Prediction.cat,
-        confidence: 99,
-        image: jpgImage,
-      );
-      prediction.saveLocal();
-      if (mounted) {
-        await Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) {
-            return PredictionDetailsPage(
-              prediction: prediction,
-            );
-          },
-        ));
-      }
-      print('created:  ${prediction.id}');
-    }
-  }
+  // void _convertImage() async {
+  //   ByteData imageData = await rootBundle.load('assets/images/cat.1501.jpg');
+  //   img.Image? my_image = img.decodeImage(imageData.buffer.asUint8List())!;
+  //   if (my_image.isNotEmpty) {
+  //     final jpgImage = img.encodePng(my_image);
+  //     final prediction = Prediction(
+  //       id: ref.read(cuidServiceProvider).newCuid(),
+  //       prediction: Prediction.cat,
+  //       confidence: 99,
+  //       image: jpgImage,
+  //     );
+  //     prediction.saveLocal();
+  //     if (mounted) {
+  //       await Navigator.of(context).push(MaterialPageRoute(
+  //         builder: (BuildContext context) {
+  //           return PredictionDetailsPage(
+  //             prediction: prediction,
+  //           );
+  //         },
+  //       ));
+  //     }
+  //     print('created:  ${prediction.id}');
+  //   }
+  // }
 
-  void _predictAll() async {
-    final arrNums = <String>[];
-    for (int i = 0; i <= 10; i++) {
-      arrNums.add(i.toString().padLeft(2, '0'));
-    }
-    final files = <String>[
-      ...arrNums.map((num) => 'assets/images/cat.15$num.jpg'),
-      ...arrNums.map((num) => 'assets/images/dog.15$num.jpg'),
-      ...arrNums.getRange(1, 7).map((num) => 'assets/images/cat.$num.jpg'),
-    ];
-    for (String fileName in files) {
-      await _predictImage(fileName);
-    }
-  }
+  // void _predictAll() async {
+  //   final arrNums = <String>[];
+  //   for (int i = 0; i <= 10; i++) {
+  //     arrNums.add(i.toString().padLeft(2, '0'));
+  //   }
+  //   final files = <String>[
+  //     ...arrNums.map((num) => 'assets/images/cat.15$num.jpg'),
+  //     ...arrNums.map((num) => 'assets/images/dog.15$num.jpg'),
+  //     ...arrNums.getRange(1, 7).map((num) => 'assets/images/cat.$num.jpg'),
+  //   ];
+  //   for (String fileName in files) {
+  //     await _predictImage(fileName);
+  //   }
+  // }
 
   void _pickImage(XFile imageFile) async {
     setState(() {
@@ -148,6 +150,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     return value;
   }
 
+  final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+    minimumSize: const Size.fromHeight(40),
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,69 +161,104 @@ class _HomePageState extends ConsumerState<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text(
-                    'Cats Vs Dogs',
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // _predictAll();
-                      _convertImage();
-                    },
-                    child: const Text('Load image'),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  PickImageButton(onChoose: (XFile file) {
-                    _pickImage(file);
-                  }),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const HistoryPage();
-                        },
-                      ));
-                    },
-                    child: const Text('History'),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      final repo = ref.read(predictionsRepositoryProvider);
-                      repo.clear();
-                    },
-                    child: const Text('Clear'),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return const StatisticsPage();
-                        },
-                      ));
-                    },
-                    child: const Text('Statistics'),
-                  ),
-                ],
-              ),
+      body: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Center(
+          child: isLoading
+              ? const CircularProgressIndicator()
+              : ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        // const Text(
+                        //   'Cats Vs Dogs',
+                        // ),
+                        SvgPicture.asset(
+                          'assets/images/dog_cat.svg',
+                          width: 250,
+                          height: 250,
+                          color: Theme.of(context).primaryColor.withAlpha(140),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        // ElevatedButton(
+                        //   style: buttonStyle,
+                        //   onPressed: () {
+                        //     // _predictAll();
+                        //     _convertImage();
+                        //   },
+                        //   child: const Text('Load image'),
+                        // ),
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
+                        PickImageButton(
+                          buttonStyle: buttonStyle,
+                          onChoose: (XFile file) {
+                            _pickImage(file);
+                          },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                          style: buttonStyle,
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return const HistoryPage();
+                              },
+                            ));
+                          },
+                          child: const Text('History'),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                          style: buttonStyle,
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isDismissible: false,
+                              builder: (BuildContext context) {
+                                return ConfirmDelete(
+                                  text: 'Clear all stored data?',
+                                  onConfirmed: (bool isConfirmed) {
+                                    if (isConfirmed) {
+                                      final repo = ref
+                                          .read(predictionsRepositoryProvider);
+                                      repo.clear();
+                                    }
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          child: const Text('Clear'),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ElevatedButton(
+                          style: buttonStyle,
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return const StatisticsPage();
+                              },
+                            ));
+                          },
+                          child: const Text('Statistics'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }

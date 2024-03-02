@@ -45,6 +45,7 @@ dependencies:
   json_annotation: ^4.8.1
   flutter_data: ^1.5.14
   path_provider: ^2.1.2
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -79,34 +80,8 @@ flutter:
 
   assets:
     - assets/models/cats_with_dogs_advanced.tflite
-    - assets/images/cat.01.jpg
-    - assets/images/cat.02.jpg
-    - assets/images/cat.03.jpg
-    - assets/images/cat.04.jpg
-    - assets/images/cat.05.jpg
-    - assets/images/cat.06.jpg
-    - assets/images/cat.1500.jpg
-    - assets/images/cat.1501.jpg
-    - assets/images/cat.1502.jpg
-    - assets/images/cat.1503.jpg
-    - assets/images/cat.1504.jpg
-    - assets/images/cat.1505.jpg
-    - assets/images/cat.1506.jpg
-    - assets/images/cat.1507.jpg
-    - assets/images/cat.1508.jpg
-    - assets/images/cat.1509.jpg
-    - assets/images/cat.1510.jpg
-    - assets/images/dog.1500.jpg
-    - assets/images/dog.1501.jpg
-    - assets/images/dog.1502.jpg
-    - assets/images/dog.1503.jpg
-    - assets/images/dog.1504.jpg
-    - assets/images/dog.1505.jpg
-    - assets/images/dog.1506.jpg
-    - assets/images/dog.1507.jpg
-    - assets/images/dog.1508.jpg
-    - assets/images/dog.1509.jpg
-    - assets/images/dog.1510.jpg
+    - assets/images/dog_cat.png
+    - assets/images/dog_cat.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

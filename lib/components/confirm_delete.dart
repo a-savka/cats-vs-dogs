@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class ConfirmDelete extends StatelessWidget {
   final void Function(bool confirmed) onConfirmed;
+  final String text;
 
   const ConfirmDelete({
     Key? key,
+    required this.text,
     required this.onConfirmed,
   }) : super(key: key);
 
@@ -15,10 +17,10 @@ class ConfirmDelete extends StatelessWidget {
         const SizedBox(
           height: 20,
         ),
-        const Center(
+        Center(
           child: Text(
-            'Delete this prediction?',
-            style: TextStyle(fontSize: 18),
+            text,
+            style: const TextStyle(fontSize: 18),
           ),
         ),
         const SizedBox(
