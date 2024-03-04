@@ -65,46 +65,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     return prediction;
   }
 
-  // void _convertImage() async {
-  //   ByteData imageData = await rootBundle.load('assets/images/cat.1501.jpg');
-  //   img.Image? my_image = img.decodeImage(imageData.buffer.asUint8List())!;
-  //   if (my_image.isNotEmpty) {
-  //     final jpgImage = img.encodePng(my_image);
-  //     final prediction = Prediction(
-  //       id: ref.read(cuidServiceProvider).newCuid(),
-  //       prediction: Prediction.cat,
-  //       confidence: 99,
-  //       image: jpgImage,
-  //     );
-  //     prediction.saveLocal();
-  //     if (mounted) {
-  //       await Navigator.of(context).push(MaterialPageRoute(
-  //         builder: (BuildContext context) {
-  //           return PredictionDetailsPage(
-  //             prediction: prediction,
-  //           );
-  //         },
-  //       ));
-  //     }
-  //     print('created:  ${prediction.id}');
-  //   }
-  // }
-
-  // void _predictAll() async {
-  //   final arrNums = <String>[];
-  //   for (int i = 0; i <= 10; i++) {
-  //     arrNums.add(i.toString().padLeft(2, '0'));
-  //   }
-  //   final files = <String>[
-  //     ...arrNums.map((num) => 'assets/images/cat.15$num.jpg'),
-  //     ...arrNums.map((num) => 'assets/images/dog.15$num.jpg'),
-  //     ...arrNums.getRange(1, 7).map((num) => 'assets/images/cat.$num.jpg'),
-  //   ];
-  //   for (String fileName in files) {
-  //     await _predictImage(fileName);
-  //   }
-  // }
-
   void _pickImage(XFile imageFile) async {
     setState(() {
       isLoading = true;
@@ -172,9 +132,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        // const Text(
-                        //   'Cats Vs Dogs',
-                        // ),
                         SvgPicture.asset(
                           'assets/images/dog_cat.svg',
                           width: 250,
@@ -184,17 +141,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                         const SizedBox(
                           height: 40,
                         ),
-                        // ElevatedButton(
-                        //   style: buttonStyle,
-                        //   onPressed: () {
-                        //     // _predictAll();
-                        //     _convertImage();
-                        //   },
-                        //   child: const Text('Load image'),
-                        // ),
-                        // const SizedBox(
-                        //   height: 5,
-                        // ),
                         PickImageButton(
                           buttonStyle: buttonStyle,
                           onChoose: (XFile file) {
