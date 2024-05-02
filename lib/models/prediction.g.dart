@@ -105,11 +105,22 @@ class PredictionAdapter extends TypeAdapter<Prediction> {
 // JsonSerializableGenerator
 // **************************************************************************
 
+Predictions _$PredictionsFromJson(Map<String, dynamic> json) => Predictions(
+      (json['data'] as List<dynamic>)
+          .map((e) => Prediction.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$PredictionsToJson(Predictions instance) =>
+    <String, dynamic>{
+      'data': instance.data,
+    };
+
 Prediction _$PredictionFromJson(Map<String, dynamic> json) => Prediction(
       id: json['id'] as String,
       prediction: json['prediction'] as String,
       confidence: json['confidence'] as int,
-      image: const Uint8ListConverter().fromJson(json['image'] as List<int>),
+      image: const Uint8ListConverter().fromJson(json['image'] as List),
       validPrediction: json['validPrediction'] as String?,
       timestamp: json['timestamp'] == null
           ? null

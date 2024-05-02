@@ -1,11 +1,14 @@
 import 'dart:typed_data';
-import 'package:cats_vs_dogs/components/confirm_delete.dart';
+
 import 'package:cats_vs_dogs/components/pick_image_button.dart';
 import 'package:cats_vs_dogs/models/prediction.dart';
 import 'package:cats_vs_dogs/pages/history/history.page.dart';
+import 'package:cats_vs_dogs/pages/options/options.page.dart';
 import 'package:cats_vs_dogs/pages/prediction-details/prediction-details.page.dart';
 import 'package:cats_vs_dogs/pages/statistics/statistics.page.dart';
+import 'package:cats_vs_dogs/providers/ordered_predictions_provider.dart';
 import 'package:cats_vs_dogs/services/cuid.service.dart';
+import 'package:cats_vs_dogs/services/filesystem.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_data/flutter_data.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -167,24 +170,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ElevatedButton(
                           style: buttonStyle,
                           onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isDismissible: false,
+                            Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) {
-                                return ConfirmDelete(
-                                  text: 'Clear all stored data?',
-                                  onConfirmed: (bool isConfirmed) {
-                                    if (isConfirmed) {
-                                      final repo = ref
-                                          .read(predictionsRepositoryProvider);
-                                      repo.clear();
-                                    }
-                                  },
-                                );
+                                return const StatisticsPage();
                               },
-                            );
+                            ));
                           },
-                          child: const Text('Clear'),
+                          child: const Text('Statistics'),
                         ),
                         const SizedBox(
                           height: 10,
@@ -194,11 +186,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) {
-                                return const StatisticsPage();
+                                return const OptionsPage();
                               },
                             ));
                           },
-                          child: const Text('Statistics'),
+                          child: const Text('Options'),
                         ),
                       ],
                     ),

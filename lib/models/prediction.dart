@@ -1,11 +1,22 @@
 import 'dart:typed_data';
 import 'package:cats_vs_dogs/models/conerters/Uint8List.converter.dart';
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:flutter_data/flutter_data.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'prediction.g.dart';
+
+@JsonSerializable()
+class Predictions {
+  final List<Prediction> data;
+
+  Predictions(this.data);
+
+  factory Predictions.fromJson(Map<String, dynamic> json) =>
+      _$PredictionsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PredictionsToJson(this);
+}
 
 @HiveType(typeId: 1)
 @DataRepository([])

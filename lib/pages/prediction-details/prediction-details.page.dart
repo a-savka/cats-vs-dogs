@@ -43,7 +43,7 @@ class PredictionDetailsPage extends HookConsumerWidget {
             const SizedBox(
               height: 20,
             ),
-            prediction.isPredictionVerified
+            !prediction.isPredictionVerified
                 ? ConfirmPrediction(onConfirmed: (bool isValid) {
                     _onConfirmed(isValid);
                     Navigator.of(context).pop();
